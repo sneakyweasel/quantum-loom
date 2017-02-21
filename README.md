@@ -9,8 +9,22 @@ PROBLEM
 
 FONCTIONNEMENT
 --------------
+- We init a qbit from 3 anyons following a special braid with 3 T charge.
 - We braid anyons into a logic gate following the way the fuse together with parentheses.
 - We let them fuse and look at the result.
+
+- We start with two triplets of anyons.
+- Insert a control pair from 1 to 2
+- Perform CNOT
+- Extract the control pair.
+
+MATRIX OPERATIONS
+-----------------
+- Si AB = BA = I alors https://en.wikipedia.org/wiki/Invertible_matrix
+- Unitary matrix if U^U = UU^ = Identity matrix - https://en.wikipedia.org/wiki/Unitary_matrix
+- Orthogonal matrix if U^U = UU^ = Identity matrix - https://en.wikipedia.org/wiki/Orthogonal_matrix
+- Identity matrix https://en.wikipedia.org/wiki/Identity_matrix
+
 
 IDEAS
 -----
@@ -26,11 +40,12 @@ LINGO
 w * ((x * (y * z))
 w * ((x * y) * z)
 (w * (x * y)) * z
+- XOR gate - CNOT gate is essential gate with qbit rotation https://en.wikipedia.org/wiki/Controlled_NOT_gate
 
 VISUALISATION
 -------------
 - Two faced ribbons should be used. (ribbon structure)
-
+- We can load the R & B * number matrix.
 
 FIBONACCI ANYONS
 ----------------

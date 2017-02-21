@@ -1,19 +1,30 @@
 /* GLOBAL */
 html {
-  font-family: Helvetica, sans-serif; }
+  font-family: Helvetica, sans-serif;
+  background-color: black; }
   html h1 {
-    text-align: center; }
+    text-align: center;
+    color: white;
+    font-size: 40px;
+    margin: 0px 0px 15px 0px;
+    text-shadow: 4px 3px purple; }
+
+#loom {
+  margin: auto;
+  display: block;
+  width: 100%;
+  height: auto; }
 
 svg {
   margin: auto;
   display: block; }
-
-.node circle {
-  fill: #999999; }
-.node text {
-  font: 10px sans-serif; }
-
-.link {
-  fill: none;
-  stroke: #555555;
-  stroke-opacity: 0.7; }
+  svg .dot circle {
+    fill: #999999; }
+  svg text {
+    font: 14px sans-serif;
+    font-weight: bold;
+    fill: gray; }
+  svg .link {
+    fill: none;
+    stroke: #555555;
+    stroke-opacity: 1; }

@@ -22,6 +22,8 @@ MATRIX OPERATIONS
 -----------------
 - Si AB = BA = I alors https://en.wikipedia.org/wiki/Invertible_matrix
 - Unitary matrix if U^U = UU^ = Identity matrix - https://en.wikipedia.org/wiki/Unitary_matrix
+Unitary matrices have significant importance in quantum mechanics because they preserve norms, and thus, probability amplitudes.
+- Unitary matrices leave the length of a complex vector unchanged.
 - Orthogonal matrix if U^U = UU^ = Identity matrix - https://en.wikipedia.org/wiki/Orthogonal_matrix
 - Identity matrix https://en.wikipedia.org/wiki/Identity_matrix
 

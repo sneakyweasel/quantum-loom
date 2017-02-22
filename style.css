@@ -11,6 +11,12 @@ html {
     text-shadow: 4px 3px purple; }
   html p {
     text-align: center; }
+  html .maths {
+    width: 100%;
+    text-align: center; }
+    html .maths .split {
+      padding: 0px 20px;
+      display: inline-block; }
 
 #loom {
   margin: auto;

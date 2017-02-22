@@ -15,13 +15,13 @@
 <body>
 
     <img src="loom.png" id="loom" alt="">
-    <h1>QUANTUM LOOM</h1>
+    <h1>LOOM</h1>
     <svg width="960" height="200"></svg>
 
     <div class="maths">
       <p>Unitary matrix for 3 anyons of charge T is F and its inverse F* (F** = F)</p>
       <!-- wolfram alpha: F = matrix {{1/ϕ, sqrt(1/ϕ)}, {sqrt(1/ϕ), -1/ϕ}} -->
-      <!-- wolfram alpha: F* = inverse matrix {{ϕ/(1 + ϕ), 1/((1/ϕ)^(3/2) (1 + ϕ))}, {1/((1/ϕ)^(3/2) (1 + ϕ)), -ϕ/(1 + ϕ)}} -->
+      <!-- wolfram alpha: F* = matrix {{ϕ/(1 + ϕ), 1/((1/ϕ)^(3/2) (1 + ϕ))}, {1/((1/ϕ)^(3/2) (1 + ϕ)), -ϕ/(1 + ϕ)}} -->
       <div class="split">
         $$
           F = \left[
@@ -110,12 +110,17 @@
         $$
           B^{-1} = \left[
           \begin{array}{ccccc}
-          (-1)^{4/5} * (\phi + 1) & 0 \\
-          0 &  -(-1)^{2/5} * (\phi + 1)
+          e^ {4i\pi/5}(\phi + 1) & 0 \\
+          0 & -e^ {2i\pi/5}(\phi + 1)
           \end{array}
           \right]
         $$
       </div>
+    </div>
+
+    <div class="maths">
+      So we can see that all matrix operations keep anyons unmeasured since there are multiple possible values with complex numbers included in the rotations.
+    </div>
 
 <script src="braiding.js"></script>
 </body>

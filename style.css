@@ -1,13 +1,16 @@
 /* GLOBAL */
 html {
   font-family: Helvetica, sans-serif;
-  background-color: black; }
+  background-color: black;
+  color: white; }
   html h1 {
     text-align: center;
     color: white;
     font-size: 40px;
     margin: 0px 0px 15px 0px;
     text-shadow: 4px 3px purple; }
+  html p {
+    text-align: center; }
 
 #loom {
   margin: auto;

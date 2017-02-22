@@ -8,6 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.6.0/d3.min.js"></script>
+    <script  async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
@@ -16,6 +17,103 @@
     <img src="loom.png" id="loom" alt="">
     <h1>LOOM</h1>
     <svg width="960" height="200"></svg>
+
+    <p>Identity matrix for 3 anyons of charge T is F and its inverse F*</p>
+    <!-- wolfram alpha: F = matrix {{1/ϕ, sqrt(1/ϕ)}, {sqrt(1/ϕ), 1/ϕ}} -->
+    <!-- wolfram alpha: F* = inverse matrix {{ϕ/(1 - ϕ), 1/((-1 + ϕ) (1/ϕ)^(3/2))}, {1/((-1 + ϕ) (1/ϕ)^(3/2)), ϕ/(1 - ϕ)}} -->
+    $$
+      F = \left[
+      \begin{array}{c|cccc}
+      1 & 0 & 0 \\
+      \hline
+      0 & \phi^{-1} & \sqrt{\phi^{-1}} \\
+      0 & \sqrt{\phi^{-1}} & \phi^{-1}
+      \end{array}
+      \right]
+    $$
+    $$
+      F^{-1} = \left[
+      \begin{array}{c|cccc}
+      1 & 0 & 0 \\
+      \hline
+      0 & \frac{\phi}{1 - \phi} & \frac{1}{(\phi -1) (\frac{1}{\phi})^{3/2}} \\
+      0 & \frac{1}{(\phi -1) (\frac{1}{\phi})^{3/2}} & \frac{\phi}{1 - \phi}
+      \end{array}
+      \right]
+    $$
+
+    <p>R matrix to apply for bottom anyons braiding and its inverse R*</p>
+    <!-- wolfram alpha: R = matrix {{e^(-4ipi/5), 0},{0, -e^(-2ipi/5)}} -->
+    <!-- wolfram alpha: R* = inverse matrix {{e^((4 i π)/5), 0}, {0, -e^((2 i π)/5)}} -->
+    $$
+      R = \left[
+      \begin{array}{c|cccc}
+      -e^{-2i\pi/5} & 0 & 0 \\
+      \hline
+      0 & e^{-4i\pi/5} & 0 \\
+      0 & 0 & -e^{-2i\pi/5}
+      \end{array}
+      \right]
+    $$
+    $$
+      R^{-1} = \left[
+      \begin{array}{c|cccc}
+      -e^{-2i\pi/5} & 0 & 0 \\
+      \hline
+      0 & e^{4i\pi/5} & 0 \\
+      0 & 0 & -e^{2i\pi/5}
+      \end{array}
+      \right]
+    $$
+
+    <p>B matrix to apply for top anyons braiding and its inverse B*</p>
+    <!-- wolfram alpha: B is defined as {{ϕ/(1 - ϕ), 1/((-1 + ϕ) (1/ϕ)^(3/2))}, {1/((-1 + ϕ) (1/ϕ)^(3/2)), ϕ/(1 - ϕ)}}{{e^(-4ipi/5), 0},{0, -e^(-2ipi/5)}}{{1/ϕ, sqrt(1/ϕ)}, {sqrt(1/ϕ), 1/ϕ}} -->
+    <!-- wolfram alpha: B is equal as {{1/(E^(((4 I)/5) Pi) (1 - ϕ)) - ϕ/(E^(((2 I)/5) Pi) (-1 + ϕ)), 1/(E^(((4 I)/5) Pi) (1 - ϕ) Sqrt[ϕ^(-1)]) - 1/(E^(((2 I)/5) Pi) (-1 + ϕ) Sqrt[ϕ^(-1)])}, {-(1/(E^(((2 I)/5) Pi) (1 - ϕ) Sqrt[ϕ^(-1)])) + 1/(E^(((4 I)/5) Pi) (-1 + ϕ) Sqrt[ϕ^(-1)]), -(1/(E^(((2 I)/5) Pi) (1 - ϕ))) + ϕ/(E^(((4 I)/5) Pi) (-1 + ϕ))}} -->
+    $$B := F^{-1}.R.F $$
+    $$
+      B = \left[
+      \begin{array}{ccccc}
+      \frac{\phi}{1 - \phi} & \frac{1}{(\phi -1) (\frac{1}{\phi})^{3/2}} \\
+      \frac{1}{(\phi -1) (\frac{1}{\phi})^{3/2}} & \frac{\phi}{1 - \phi}
+      \end{array}
+      \right].
+      \left[
+      \begin{array}{ccccc}
+      e^{-4i\pi/5} & 0 \\
+      0 & -e^{-2i\pi/5}
+      \end{array}
+      \right].
+      \left[
+      \begin{array}{ccccc}
+      \phi^{-1} & \sqrt{\phi^{-1}} \\
+      \sqrt{\phi^{-1}} & \phi^{-1}
+      \end{array}
+      \right]
+    $$
+    $$
+      B = \left[
+      \begin{array}{ccccc}
+      \frac{e^{-4i\pi/5}}{1-\phi} - \frac{e^{-2i\pi/5}\phi}{\phi-1} &  \frac{e^{-4i\pi/5}}{(1-\phi)\sqrt{\frac{1}{\phi}}} - \frac{e^{-2i\pi/5}}{(\phi-1)\sqrt{\frac{1}{\phi}}}\\
+      \frac{e^{-4i\pi/5}}{(\phi - 1)\sqrt{\frac{1}{\phi}}} - \frac{e^{-2i\pi/5}}{(1 - \phi)\sqrt{\frac{1}{\phi}}} & \frac{e^{-4i\pi/5}\phi}{\phi-1} - \frac{e^{-2i\pi/5}}{1-\phi}
+      \end{array}
+      \right]
+    $$
+    $$
+      B^{-1} = \left[
+      \begin{array}{ccccc}
+      -(-1)^{4/5}(\phi - 1) & 0 \\
+      0 &  (-1)^{2/5}(\phi - 1)
+      \end{array}
+      \right]
+    $$
+
+
+
+    <!-- wolfram alpha: {{ϕ/(1 - ϕ), 1/((-1 + ϕ) (1/ϕ)^(3/2))}, {1/((-1 + ϕ) (1/ϕ)^(3/2)), ϕ/(1 - ϕ)}}*{{e^(-4ipi/5), 0},{0, -e^(-2ipi/5)}}*{{1/ϕ, sqrt(1/ϕ)}, {sqrt(1/ϕ), 1/ϕ}} -->
+    <!-- wolfram alpha: B = {{1/(E^(((4 I)/5) Pi) (1 - ϕ)) - ϕ/(E^(((2 I)/5) Pi) (-1 + ϕ)), 1/(E^(((4 I)/5) Pi) (1 - ϕ) Sqrt[ϕ^(-1)]) - 1/(E^(((2 I)/5) Pi) (-1 + ϕ) Sqrt[ϕ^(-1)])}, {-(1/(E^(((2 I)/5) Pi) (1 - ϕ) Sqrt[ϕ^(-1)])) + 1/(E^(((4 I)/5) Pi) (-1 + ϕ) Sqrt[ϕ^(-1)]), -(1/(E^(((2 I)/5) Pi) (1 - ϕ))) + ϕ/(E^(((4 I)/5) Pi) (-1 + ϕ))}} -->
+    <!-- wolfram alpha: B* = {{-(((-1)^(2/5) ((-1)^(2/5) + ϕ))/(-1 + ϕ)), -(((-1)^(2/5) (1 + (-1)^(2/5)))/((-1 + ϕ) Sqrt[ϕ^(-1)]))}, {((-1)^(2/5) + (-1)^(4/5))/((-1 + ϕ) Sqrt[ϕ^(-1)]), ((-1)^(2/5) + (-1)^(4/5) ϕ)/(-1 + ϕ)}} -->
+    <!-- (-((-1)^(2/5) (ϕ + (-1)^(2/5)))/(ϕ - 1) | -((-1)^(2/5) (1 + (-1)^(2/5)))/((ϕ - 1) sqrt(1/ϕ)) -->
+    <!-- ((-1)^(2/5) + (-1)^(4/5))/((ϕ - 1) sqrt(1/ϕ)) | ((-1)^(4/5) ϕ + (-1)^(2/5))/(ϕ - 1)) -->
 
 <script src="braiding.js"></script>
 </body>

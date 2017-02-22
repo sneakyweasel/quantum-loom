@@ -1,11 +1,11 @@
 /* global $, document, _, d3 */
 //--------------------------ANYONS----------------------------------------------
 class Anyon {
-    constructor(id, y, value) {
+    constructor(id, y, charge) {
         this.id = id;
         this.y = y;
         this.history = [];
-        this.value = value;
+        this.charge = charge;
     }
 
     debug() {
@@ -24,23 +24,27 @@ class Anyon {
             return "1|T";
         }
     }
-
-    processFormula(formula) {
-
-    }
 }
 
 
 //--------------------------BRAID-----------------------------------------------
 class Braid {
-    constructor(size) {
-        this.size = size;
+    constructor(structure) {
+        this.structure = structure;
+        this.size = this.parse(structure).length;
         this.steps = 0;
         this.anyons = new Array(1);
         this.anyons[0] = [];
+        var element = this.parse(structure);
         for (var i = 0; i < this.size; i++) {
-            this.anyons[0].push(new Anyon(i, i, "T", this));
+            var charge = (element[i] > 0) ? "T" : "1";
+            this.anyons[0].push(new Anyon(i, i, charge, this));
         }
+    }
+
+    parse(structure) {
+        const flatten = arr => arr.reduce((acc, val) => acc.concat(Array.isArray(val) ? flatten(val) : val), []);
+        return flatten(structure);
     }
 
     loadPattern(instructions) {
@@ -80,7 +84,7 @@ class Braid {
 
     debug() {
         var output = new Array(this.size);
-        for (var i = 0; i < size; i++) {
+        for (var i = 0; i < this.size; i++) {
             output[i] = "";
         }
         for (var x = 0; x <= this.steps; x++) {
@@ -124,6 +128,8 @@ class Braid {
             });
             links.push({
                 id: y,
+                chargeStart: this.anyons[0][y].charge,
+                chargeEnd: this.anyons[this.size][[this.anyons[this.size][y].y]].charge,
                 values: values
             });
         }
@@ -142,8 +148,8 @@ var notGate = [
 ];
 
 // initialize braid
-var size = 5;
-var braid = new Braid(size);
+var structure = [[-1,-2],[3,[4,5]]];
+var braid = new Braid(structure);
 braid.loadPattern(idGate);
 braid.debug();
 
@@ -208,101 +214,43 @@ g.selectAll(".dot")
         return y(d.y);
     });
 
-//Draw the groups
-g.append("ellipse")
-    .attr("cx", function(d) {
-        return - margin.left / 2;
-    })
-    .attr("cy", function(d) {
-        return y(3);
-    })
-    .attr("rx", 20)
-    .attr("ry", y(1.4))
-    .style("stroke", "darkgrey")
+//Draw the groups ellipses
+var ellipses = [
+    { cx: - margin.left / 2,        cy: 3,   rx: 1,   ry: 1.4 },
+    { cx: - margin.left / 2,        cy: 0.5, rx: 0.8, ry: 0.9 },
+    { cx: - margin.left / 2,        cy: 3.5, rx: 0.8, ry: 0.9 },
+    { cx: width + margin.right / 2, cy: 3,   rx: 1,   ry: 1.4 },
+    { cx: width + margin.right / 2, cy: 0.5, rx: 0.8, ry: 0.9 },
+    { cx: width + margin.right / 2, cy: 3.5, rx: 0.8, ry: 0.9 },
+];
+g.selectAll(".ellipse")
+    .data(ellipses)
+    .enter().append("ellipse")
+    .attr("cx", function(d) { return d.cx; })
+    .attr("cy", function(d) { return y(d.cy); })
+    .attr("rx", function(d) { return x(d.rx); })
+    .attr("ry", function(d) { return y(d.ry); })
+    .style("stroke", "grey")
     .style("stroke-width", "3");
 
-g.append("ellipse")
-    .attr("cx", function(d) {
-        return - margin.left / 2;
-    })
-    .attr("cy", function(d) {
-        return y(0.5);
-    })
-    .attr("rx", 15)
-    .attr("ry", y(0.9))
-    .style("stroke", "darkgrey")
-    .style("stroke-width", "3");
+// Add the ellipses anyons
+g.selectAll(".anyons")
+    .data(links)
+    .enter().append("circle")
+    .attr("r", 6)
+    .attr("cx", function(d) { return - margin.left / 2; })
+    .attr("cy", function(d) { return y(d.id); })
+    .style("fill", function(d) { return (d.chargeStart === "T") ? "dimgrey" : "white"; });
+console.log(JSON.stringify(links[2]));
+console.log(JSON.stringify(links[2].values[links[2].values.length - 1]));
+g.selectAll(".anyons")
+    .data(links)
+    .enter().append("circle")
+    .attr("r", 6)
+    .attr("cx", function(d) { return width + margin.right / 2; })
+    .attr("cy", function(d) { return y(d.id); })
+    .style("fill", function(d) { return (d.chargeEnd === "T") ? "dimgrey" : "white"; });
 
-g.append("ellipse")
-    .attr("cx", function(d) {
-        return - margin.left / 2;
-    })
-    .attr("cy", function(d) {
-        return y(3.5);
-    })
-    .attr("rx", 15)
-    .attr("ry", 35)
-    .style("stroke", "darkgrey")
-    .style("stroke-width", "3");
-
-//Draw the groups
-g.append("ellipse")
-    .attr("cx", function(d) {
-        return width + margin.right / 2;
-    })
-    .attr("cy", function(d) {
-        return y(3);
-    })
-    .attr("rx", 20)
-    .attr("ry", 55)
-    .style("stroke", "darkgrey")
-    .style("stroke-width", "3");
-
-g.append("ellipse")
-    .attr("cx", function(d) {
-        return width + margin.right / 2;
-    })
-    .attr("cy", function(d) {
-        return y(0.5);
-    })
-    .attr("rx", 15)
-    .attr("ry", 35)
-    .style("stroke", "darkgrey")
-    .style("stroke-width", "3");
-
-g.append("ellipse")
-    .attr("cx", function(d) {
-        return width + margin.right / 2;
-    })
-    .attr("cy", function(d) {
-        return y(3.5);
-    })
-    .attr("rx", 15)
-    .attr("ry", 35)
-    .style("stroke", "darkgrey")
-    .style("stroke-width", "3");
-
-// Add the anyons
-for (var i = 0; i < 5; i++){
-    g.append("circle")
-        .attr("r", 7)
-        .attr("cx", function(d) {
-            return - margin.left / 2;
-        })
-        .attr("cy", function(d) {
-            return y(i);
-        })
-        .style("fill", "grey");
-    g.append("circle")
-        .attr("r", 7)
-        .attr("cx", function(d) {
-            return width + margin.right / 2;
-        })
-        .attr("cy", function(d) {
-            return y(i);
-        })
-        .style("fill", "grey");
-}
 
 // Add the matrix operations
 var sum = 0;
@@ -321,7 +269,6 @@ g.selectAll(".text")
     .text(function(d) { return d[0]+d[1]; });
 
 // Add the paths
-// TODO: include z-index
 var link = g.selectAll(".link")
     .data(links)
     .enter().append("g")

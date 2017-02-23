@@ -284,6 +284,7 @@ for (var step = 1; step < links[0].values.length; step++) {
     for (i = 0; i < slices.length; i++) {
         g.append("path")
           .attr("class", "line")
+          .attr("class", "anyon" + slices[i][1].id)
           .attr("d", function(d) {
               return line(slices[i]);
           })
@@ -292,10 +293,12 @@ for (var step = 1; step < links[0].values.length; step++) {
           })
           .style("stroke-width", 4)
           .on("mouseover", function(d) {
-              d3.select(this).style("stroke-width", "8");
+              svg.selectAll("." + this.getAttribute("class"))
+                .style("stroke-width", "6");
           })
           .on("mouseout", function(d) {
-              d3.select(this).style("stroke-width", "4");
+              svg.selectAll("." + this.getAttribute("class"))
+                .style("stroke-width", "4");
           });
     }
 }

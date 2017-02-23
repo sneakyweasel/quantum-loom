@@ -255,13 +255,32 @@ g.selectAll(".text")
 // Weave the paths
 for (var step = 1; step < links[0].values.length; step++) {
     var slices = [];
+
+    // Create paths with curve padding
     for (var i = 0; i < links.length; i++) {
-        slices.push([links[i].values[step-1], links[i].values[step]]);
+        var slice1 = links[i].values[step-1];
+        var padding1 = {
+            x: slice1.x + 0.12,
+            y: slice1.y,
+            z: slice1.z,
+            id: slice1.id
+        };
+        var slice2 = links[i].values[step];
+        var padding2 = {
+            x: slice2.x - 0.12,
+            y: slice2.y,
+            z: slice2.z,
+            id: slice2.id
+        };
+        slices.push([slice1, padding1, padding2, slice2]);
     }
+
     // Ordering render
     slices.sort(function (a, b) {
         return a[0].z - b[0].z;
     });
+
+    // Render segments
     for (i = 0; i < slices.length; i++) {
         g.append("path")
           .attr("class", "line")
@@ -271,15 +290,12 @@ for (var step = 1; step < links[0].values.length; step++) {
           .style("stroke", function(d) {
               return z(slices[i][1].id);
           })
-          .style("z-index", function(d) {
-              return slices[i][1].z;
-          })
           .style("stroke-width", 4)
           .on("mouseover", function(d) {
-              d3.select(this).style("stroke-width", "10");
+              d3.select(this).style("stroke-width", "8");
           })
           .on("mouseout", function(d) {
-              d3.select(this).style("stroke-width", "5");
+              d3.select(this).style("stroke-width", "4");
           });
     }
 }

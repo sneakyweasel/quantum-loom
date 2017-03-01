@@ -8,7 +8,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.6.0/d3.min.js"></script>
-    <script  async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/mathjax/2.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/3.9.3/math.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
@@ -16,28 +17,22 @@
 
     <img src="loom.png" id="loom" alt="">
     <h1>LOOM</h1>
-    <svg width="960" height="200"></svg>
+    <svg></svg>
 
     <div class="maths">
-      <p>Unitary matrix for 3 anyons of charge T is F and its inverse F* (F** = F)</p>
+        <div id="pretty">$$$$</div>
+        <div id="result"></div>
+    </div>
+
+    <div class="maths">
+      <p>Unitary matrix for 3 anyons of charge T is F</p>
       <!-- wolfram alpha: F = matrix {{1/ϕ, sqrt(1/ϕ)}, {sqrt(1/ϕ), -1/ϕ}} -->
-      <!-- wolfram alpha: F* = matrix {{ϕ/(1 + ϕ), 1/((1/ϕ)^(3/2) (1 + ϕ))}, {1/((1/ϕ)^(3/2) (1 + ϕ)), -ϕ/(1 + ϕ)}} -->
       <div class="split">
         $$
           F = \left[
           \begin{array}{ccccc}
           \phi^{-1} & \sqrt{\phi^{-1}} \\
           \sqrt{\phi^{-1}} & -\phi^{-1}
-          \end{array}
-          \right]
-        $$
-      </div>
-      <div class="split">
-        $$
-          F^{-1} = \left[
-          \begin{array}{ccccc}
-          \frac{\phi}{\phi + 1} & \frac{1}{(\frac{1}{\phi})^{3/2}(\phi + 1)} \\
-          \frac{1}{ (\frac{1}{\phi})^{3/2}(\phi + 1)} & -\frac{\phi}{\phi+1}
           \end{array}
           \right]
         $$
@@ -73,22 +68,19 @@
     <div class="maths">
       <p>B matrix to apply for top anyons braiding and its inverse B*</p>
       <!-- wolfram alpha: B is defined as {{ϕ/(1 + ϕ), 1/((1/ϕ)^(3/2) (1 + ϕ))}, {1/((1/ϕ)^(3/2) (1 + ϕ)), -ϕ/(1 + ϕ)}}{{e^(-4ipi/5), 0},{0, -e^(-2ipi/5)}}{{1/ϕ, sqrt(1/ϕ)}, {sqrt(1/ϕ), -1/ϕ}} -->
-      <!-- wolfram alpha: B is equal as {{e^(-(4 i π)/5)/(ϕ + 1), 0}, {0, -e^(-(2 i π)/5)/(ϕ + 1)}} -->
-      <!-- wolfram alpha: B* is equal to {{-(-1)^(4/5) (-1 + ϕ), 0}, {0, (-1)^(2/5) (-1 + ϕ)}} -->
-
       $$
-        B = F^{-1}RF = \left[
+        B = FRF = \left[
         \begin{array}{ccccc}
-        \frac{\phi}{\phi + 1} & \frac{1}{(\frac{1}{\phi})^{3/2}(\phi + 1)} \\
-        \frac{1}{ (\frac{1}{\phi})^{3/2}(\phi + 1)} & -\frac{\phi}{\phi+1}
+        \phi^{-1} & \sqrt{\phi^{-1}} \\
+        \sqrt{\phi^{-1}} & -\phi^{-1}
         \end{array}
-        \right]
+        \right].
         \left[
         \begin{array}{ccccc}
         e^{-4i\pi/5} & 0 \\
         0 & -e^{-2i\pi/5}
         \end{array}
-        \right]
+        \right].
         \left[
         \begin{array}{ccccc}
         \phi^{-1} & \sqrt{\phi^{-1}} \\
@@ -96,33 +88,10 @@
         \end{array}
         \right]
       $$
-      <div class="split">
-        $$
-          B = \left[
-          \begin{array}{ccccc}
-          \frac{e^{-4i\pi/5}}{\phi + 1} & 0 \\
-          0 &  -\frac{e^{-2i\pi/5}}{\phi + 1}
-          \end{array}
-          \right]
-        $$
-      </div>
-      <div class="split">
-        $$
-          B^{-1} = \left[
-          \begin{array}{ccccc}
-          e^ {4i\pi/5}(\phi + 1) & 0 \\
-          0 & -e^ {2i\pi/5}(\phi + 1)
-          \end{array}
-          \right]
-        $$
-      </div>
     </div>
 
-    <div class="maths">
-      We can see that matrix operations R and B keep anyons unmeasured.
-    </div>
 
-<script src="braiding.js"></script>
+<script src="build/braiding.js"></script>
 </body>
 
 </html>

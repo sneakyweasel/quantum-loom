@@ -8,7 +8,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.6.0/d3.min.js"></script>
-    <script  async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/mathjs/3.9.3/math.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/mathjax/2.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
@@ -17,6 +18,11 @@
     <img src="loom.png" id="loom" alt="">
     <h1>LOOM</h1>
     <svg></svg>
+
+    <div id="controls">
+        <label>Structure: <input type="text" id="structure"></label><br>
+        <label>Instructions: <input type="text" id="instructions"></label><br>
+    </div>
 
     <div class="maths">
       <p>Unitary matrix for 3 anyons of charge T is F and its inverse F* (F** = F)</p>

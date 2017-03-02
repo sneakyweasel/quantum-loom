@@ -170,6 +170,8 @@ var margin = {
     bottom: 20,
     left: 80
 };
+svg.attr("height", 200);
+svg.attr("width", 1000);
 var width = svg.attr("width") - margin.left - margin.right;
 var height = svg.attr("height") - margin.top - margin.bottom;
 var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -250,7 +252,7 @@ g.selectAll(".text")
         return (d[0] === "B") ? 25 : 150;
     })
     .style("text-anchor", "middle")
-    .text(function(d) { return d[0]+d[1]; });
+    .text(function(d) { return d[0] + d[1]; });
 
 // Weave the paths
 for (var step = 1; step < links[0].values.length; step++) {

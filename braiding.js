@@ -1,5 +1,24 @@
-/* global $, document, _, d3 */
+// Phase weaves cancel themselves such as R3 R-2 R1
+// Exchange weaves swap anyons like R5
+
+/* global $, document, _, d3, math */
 const flatten = arr => arr.reduce((acc, val) => acc.concat(Array.isArray(val) ? flatten(val) : val), []);
+
+function traverse (x) {
+    if (Object.prototype.toString.call(x) === "[object Array]") {
+        traverseArray(x);
+        console.log(x);
+    } else {
+        console.log(x);
+    }
+}
+
+function traverseArray (arr) {
+    arr.forEach(function (x) {
+        traverse(x);
+    });
+}
+
 
 //--------------------------ANYONS----------------------------------------------
 class Anyon {
@@ -31,11 +50,11 @@ class Braid {
                 this.instructions.push([instr[0], parseInt(instr.replace(/[^\d-]/g, ""))]);
             }
         }
-        this.size = this.parse(this.structure).length;
+        this.size = flatten(this.structure).length;
         this.steps = 0;
         this.anyons = new Array(1);
         this.anyons[0] = [];
-        var element = this.parse(this.structure);
+        var element = flatten(this.structure);
         for (var i = 0; i < this.size; i++) {
             var charge = (element[i] > 0) ? "T" : "1";
             this.anyons[0].push(new Anyon(i, i, charge));
@@ -57,12 +76,49 @@ class Braid {
         for (var anyon of this.anyons[0]) {
             anyon.history = [];
         }
-        var element = this.parse(this.structure);
+        var element = flatten(this.structure);
         for (var i = 0; i < this.size; i++) {
             var charge = (element[i] > 0) ? "T" : "1";
             this.anyons[0].push(new Anyon(i, i, charge));
         }
         this.loadPattern();
+    }
+
+    matrixOperation() {
+        var f = "[[phi^-1, sqrt(phi^-1)], [sqrt(phi^-1), -phi^-1]]";
+        var r = "[[e^(-4*i*pi/5), 0], [0, -e^(-2*i*pi/5)]]";
+        var rInv = "[[e^(4*i*pi/5), 0], [0, -e^(2*i*pi/5)]]";
+        var b = "[[-(sqrt(5) - 1) / 2 *e^(-4*i*pi/5), -i*sqrt((sqrt(5) - 1) / 2)e^(-i*pi/10)], [-i*sqrt((sqrt(5) - 1) / 2)e^(-i*pi/10), -(sqrt(5) - 1) / 2]]";
+        //var b = "{{-((sqrt(5) - 1) / 2) *e^(-4*i*pi/5), -i*sqrt(((sqrt(5) - 1) / 2)e^(-i*pi/10)}, {-i*sqrt((sqrt(5) - 1) / 2)e^(-i*pi/10), -(sqrt(5) - 1) / 2}}";
+        var bInv = "[[1, 1], [1, 1]]";
+        var result = [f];
+        for (var operation of this.instructions) {
+            if (operation[0] === "R" && operation[1] > 0) {
+                for (var i = 0; i < operation[1]; i++) {
+                    result.push(r);
+                }
+            } else if (operation[0] === "R" && operation[1] < 0) {
+                for (i = 0; i < -operation[1]; i++) {
+                    result.push(rInv);
+                }
+            } else if (operation[0] === "B" && operation[1] > 0) {
+                for (i = 0; i < operation[1]; i++) {
+                    result.push(b);
+                }
+            } else if (operation[0] === "B" && operation[1] < 0) {
+                for (i = 0; i < -operation[1]; i++) {
+                    result.push(bInv);
+                }
+            }
+            result.push(f);
+        }
+        result = result.join(" * ");
+        console.log(result);
+        var pretty = document.getElementById("pretty");
+        var results = document.getElementById("result");
+
+        pretty.innerHTML = "$$" + math.parse(result).toTex() + "$$";
+        results.innerHTML = math.format(math.eval(result));
     }
 
     loadPattern() {
@@ -76,6 +132,7 @@ class Braid {
                 this.weave(anyons[0], anyons[1]);
             }
         }
+        this.matrixOperation();
     }
 
     static isValid(data) {
@@ -92,13 +149,13 @@ class Braid {
     }
 
     parse(structure) {
-        return flatten(structure);
-        // { cx: - margin.left / 2,        cy: 3,   rx: 1,   ry: 1.4 }
-        // { cx: - margin.left / 2,        cy: 0.5, rx: 0.8, ry: 0.9 }
-        // { cx: - margin.left / 2,        cy: 3.5, rx: 0.8, ry: 0.9 }
-        // { cx: width + margin.right / 2, cy: 3,   rx: 1,   ry: 1.4 }
-        // { cx: width + margin.right / 2, cy: 0.5, rx: 0.8, ry: 0.9 }
-        // { cx: width + margin.right / 2, cy: 3.5, rx: 0.8, ry: 0.9 }
+        var anyons = flatten(structure);
+        // { cx: -2,                            cy: 3,   rx: 1,   ry: 1.4 },
+        // { cx: -2,                            cy: 0.5, rx: 0.8, ry: 0.9 },
+        // { cx: -2,                            cy: 3.5, rx: 0.8, ry: 0.9 },
+        // { cx: nodes[nodes.length - 1].x + 2, cy: 3,   rx: 1,   ry: 1.4 },
+        // { cx: nodes[nodes.length - 1].x + 2, cy: 0.5, rx: 0.8, ry: 0.9 },
+        // { cx: nodes[nodes.length - 1].x + 2, cy: 3.5, rx: 0.8, ry: 0.9 }
     }
 
     weave(pos1, pos2) {
@@ -190,22 +247,30 @@ class Braid {
 //--------------------------INIT------------------------------------------------
 // ID gate
 var idGate = "B3 R-2 B-4 R2 B4 R2 B-2 R-2 B-4 R-4 B-2 R4 B2 R-2 B2 R2 B-2 R3";
-var idStructure = [[-1,-1],[1,[1,1]]];
+var idStructure = [[0,0],[1,[1,1]]];
 var idData = [idGate, idStructure];
 
 // NOT gate
 var notGate = "R-2 B-4 R4 B-2 R2 B2 R-2 B4 R-2 B4 R-2 B4 R2 B-4 R2 B-2 R2 B-2 R-2";
-var notStructure = [1,[-1,1]];
+var notStructure = [1,[0,1]];
 var notData = [notGate, notStructure];
+
+// Braidings
+var s1Braiding = "R-1 B2 R-1 B-1 R1 B-1";
+var s1Data = [s1Braiding, notStructure];
+
+
+var injectionBraiding = "B3 R-2 B-4 R2 B4 R2 B-2 R-2 B-4 R-4 B-2 R4 B2 R-2 B2 R2 B-2 R3";
 
 // initialize braid
 var nodes = [];
 var links = [];
 var instructions = [];
-var data = idData;
+var data = s1Data;
 var braid = new Braid(data);
 braid.generateD3();
 drawBraid();
+traverse(idStructure);
 
 // controls
 var inputStruct = document.getElementById("structure");
@@ -270,17 +335,17 @@ function drawBraid() {
 
     //Draw the groups ellipses
     var ellipses = [
-        { cx: - margin.left / 2,        cy: 3,   rx: 1,   ry: 1.4 },
-        { cx: - margin.left / 2,        cy: 0.5, rx: 0.8, ry: 0.9 },
-        { cx: - margin.left / 2,        cy: 3.5, rx: 0.8, ry: 0.9 },
-        { cx: width + margin.right / 2, cy: 3,   rx: 1,   ry: 1.4 },
-        { cx: width + margin.right / 2, cy: 0.5, rx: 0.8, ry: 0.9 },
-        { cx: width + margin.right / 2, cy: 3.5, rx: 0.8, ry: 0.9 },
+        { cx: -2,                            cy: 3,   rx: 1,   ry: 1.4 },
+        { cx: -2,                            cy: 0.5, rx: 0.8, ry: 0.9 },
+        { cx: -2,                            cy: 3.5, rx: 0.8, ry: 0.9 },
+        { cx: nodes[nodes.length - 1].x + 2, cy: 3,   rx: 1,   ry: 1.4 },
+        { cx: nodes[nodes.length - 1].x + 2, cy: 0.5, rx: 0.8, ry: 0.9 },
+        { cx: nodes[nodes.length - 1].x + 2, cy: 3.5, rx: 0.8, ry: 0.9 }
     ];
     g.selectAll(".ellipse")
         .data(ellipses)
         .enter().append("ellipse")
-        .attr("cx", function(d) { return d.cx;    })
+        .attr("cx", function(d) { return x(d.cx); })
         .attr("cy", function(d) { return y(d.cy); })
         .attr("rx", function(d) { return x(d.rx); })
         .attr("ry", function(d) { return y(d.ry); })
@@ -292,14 +357,14 @@ function drawBraid() {
         .data(links)
         .enter().append("circle")
         .attr("r", 6)
-        .attr("cx", function(d) { return - margin.left / 2; })
+        .attr("cx", function(d) { return x(-2); })
         .attr("cy", function(d) { return y(d.id); })
         .style("fill", function(d) { return (d.chargeStart === "T") ? "dimgrey" : "white"; });
     g.selectAll(".anyons")
         .data(links)
         .enter().append("circle")
         .attr("r", 6)
-        .attr("cx", function(d) { return width + margin.right / 2; })
+        .attr("cx", function(d) { return x(nodes[nodes.length - 1].x + 2); })
         .attr("cy", function(d) { return y(d.id); })
         .style("fill", function(d) { return (d.chargeEnd === "T") ? "dimgrey" : "white"; });
 
